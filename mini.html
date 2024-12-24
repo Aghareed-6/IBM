@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IBAN Checker</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #1e3c72, #2a5298);
+            color: #ffffff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .container {
+            text-align: center;
+            background: rgba(255, 255, 255, 0.15);
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.3);
+            width: 400px;
+        }
+        h1 {
+            margin-bottom: 20px;
+            font-size: 2.5rem;
+            letter-spacing: 1.5px;
+            color: #f5f5f5;
+        }
+        input[type="text"] {
+            width: 90%;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 1rem;
+            margin-bottom: 20px;
+            box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.1);
+            transition: border 0.3s, box-shadow 0.3s;
+        }
+        input[type="text"]:focus {
+            border-color: #6e8efb;
+            box-shadow: 0 0 10px rgba(110, 142, 251, 0.5);
+            outline: none;
+        }
+        button {
+            padding: 12px 30px;
+            font-size: 1rem;
+            font-weight: bold;
+            color: #fff;
+            background: linear-gradient(135deg, #6e8efb, #a777e3);
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background 0.3s, transform 0.2s, box-shadow 0.2s;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+        button:hover {
+            background: linear-gradient(135deg, #a777e3, #6e8efb);
+            transform: scale(1.05);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+        }
+        button:active {
+            transform: scale(1);
+        }
+        .result {
+            margin-top: 20px;
+            font-size: 1.2rem;
+            text-align: left;
+            background: rgba(0, 0, 0, 0.2);
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.2);
+        }
+        .result ul {
+            padding-left: 20px;
+        }
+        .result ul li {
+            margin-bottom: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>IBAN Checker</h1>
+        <form id="ibanForm">
+            <input 
+                type="text" 
+                placeholder="Enter your IBAN here..." 
+                name="iban" 
+                id="ibanInput" 
+                maxlength="34" 
+                required 
+            />
+            <br />
+            <button type="submit">Check!</button>
+        </form>
+        <div class="result" id="result"></div>
+    </div>
+
+    <script>
+        const banks = {
+            '55': { 'nameEn': 'Banque Saudi Fransi', 'nameAr': 'البنك السعودي الفرنسي' },
+            '80': { 'nameEn': 'Alrajhi Bank', 'nameAr': 'بنك الراجحي' },
+            '10': { 'nameEn': 'National Commercial Bank', 'nameAr': 'البنك الأهلي التجاري' },
+            '45': { 'nameEn': 'SABB', 'nameAr': 'ساب' },
+            '20': { 'nameEn': 'Riyad Bank', 'nameAr': 'بنك الرياض' },
+            '40': { 'nameEn': 'SAMBA', 'nameAr': 'سامبا' },
+            '05': { 'nameEn': 'AL Inma Bank', 'nameAr': 'بنك الانماء' },
+            '50': { 'nameEn': 'AlAwwal Bank', 'nameAr': 'البنك الأول' },
+            '60': { 'nameEn': 'Bank Aljazerah', 'nameAr': 'بنك الجزيرة' },
+            '65': { 'nameEn': 'Saudi Investment Bank', 'nameAr': 'البنك السعودي للاستثمار' },
+            '15': { 'nameEn': 'BANK ALBELAD', 'nameAr': 'بنك البلاد' },
+            '30': { 'nameEn': 'Arab National Bank', 'nameAr': 'البنك العربي الوطني' },
+        };
+
+        document.getElementById('ibanForm').addEventListener('submit', function (e) {
+            e.preventDefault();
+
+            const ibanInput = document.getElementById('ibanInput').value.trim();
+            const resultDiv = document.getElementById('result');
+
+            const sanitizedIban = ibanInput.replaceAll(' ', '');
+
+            if (!sanitizedIban.startsWith('SA') || sanitizedIban.length !== 24) {
+                resultDiv.textContent = 'Invalid IBAN. It must start with "SA" and be exactly 24 characters long.';
+                return;
+            }
+
+            const bankCode = sanitizedIban.slice(4, 6);
+
+            if (banks[bankCode]) {
+                resultDiv.innerHTML = `
+                    <p>Bank Name: ${banks[bankCode].nameEn} (${banks[bankCode].nameAr})</p>
+                `;
+            } else {
+                resultDiv.textContent = 'Bank not found or invalid IBAN.';
+            }
+        });
+    </script>
+</body>
+</html>
